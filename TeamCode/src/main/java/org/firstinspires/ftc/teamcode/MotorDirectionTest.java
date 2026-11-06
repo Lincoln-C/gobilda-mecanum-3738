@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.constants.RobotConstants;
 
 @TeleOp
-public class MotorOutputTest extends LinearOpMode {
+public class MotorDirectionTest extends LinearOpMode {
     // Hardware variables
     private DcMotor leftBack;
     private DcMotor rightBack;
@@ -25,6 +26,17 @@ public class MotorOutputTest extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, RobotConstants.MOTOR_RIGHT_FRONT);
         leftFront = hardwareMap.get(DcMotor.class, RobotConstants.MOTOR_LEFT_FRONT);
 
+        // Reverse motors
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Robot is started
         telemetry.addData("Status", "Running");
         telemetry.update();
@@ -32,22 +44,32 @@ public class MotorOutputTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            // Push button for each motor to rotate forward.
             if (gamepad1.x) {
                 leftFront.setPower(motorTestSpeed);
+            } else {
+                leftFront.setPower(0.0);
             }
+
             if (gamepad1.y) {
                 rightFront.setPower(motorTestSpeed);
+            } else {
+                rightFront.setPower(0.0);
             }
+
             if (gamepad1.a) {
                 leftBack.setPower(motorTestSpeed);
+            } else {
+                leftBack.setPower(0.0);
             }
+
             if (gamepad1.b) {
                 rightBack.setPower(motorTestSpeed);
+            } else {
+                rightBack.setPower(0.0);
             }
-        }
 
-        updateDriveTelemetry();
+            updateDriveTelemetry();
+        }
     }
 
     // Telemetry
