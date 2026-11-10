@@ -28,6 +28,13 @@ public class MecanumDriveTrain {
     // Set initial drive mode here
     private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
+    /**
+     * Drive input curve<br>
+     * Uses cubic function for more precise slow driving<br>
+     * 0 is linear, 1 is cubic curve (aggressive)
+     */
+    private double driveInputCurve = 0.0;
+
     // Initialize hardware variables
     private final DcMotor leftBack;
     private final DcMotor rightBack;
@@ -81,6 +88,7 @@ public class MecanumDriveTrain {
      * Reset the IMU position to set the front of the robot
      * Switch the drive mode
      * Get the current drive mode
+     * Get and set the drive curve filter
      * Make the robot drive
      * AND NOTHING ELSE.
      * How simple is that???
@@ -168,13 +176,26 @@ public class MecanumDriveTrain {
         return imu.getRobotAngularVelocity(AngleUnit.DEGREES);
     }
 
+    /**
+     * Sets drive inputCurve<br>
+     * 0.0 is linear, 1.0 is cubic curve (aggressive)
+     * @param inputCurve Value between 0.0 and 1.0
+     */
+    public void setDriveInputCurve(double inputCurve) {
+        this.driveInputCurve = inputCurve;
+    }
+
+    public double getDriveInputCurve() {
+        return this.driveInputCurve;
+    }
+
     // INTERNAL METHODS
     // These are inaccessible, you cannot call them manually from the TeleOp or Auton.
     // These are for organizational purposes.
     private void driveFieldCentric(double driveX, double driveY, double turn) {
-        driveX = applyDeadzone(driveX);
-        driveY = applyDeadzone(driveY);
-        turn = applyDeadzone(turn);
+        driveX = filterInput(driveX);
+        driveY = filterInput(driveY);
+        turn = filterInput(turn);
 
         turn *= RobotConstants.TURN_MULTIPLIER;
         driveX *= RobotConstants.STRAFE_MULTIPLIER;
@@ -189,9 +210,9 @@ public class MecanumDriveTrain {
     }
 
     private void driveRobotCentric(double driveX, double driveY, double turn) {
-        driveX = applyDeadzone(driveX);
-        driveY = applyDeadzone(driveY);
-        turn = applyDeadzone(turn);
+        driveX = filterInput(driveX);
+        driveY = filterInput(driveY);
+        turn = filterInput(turn);
 
         turn *= RobotConstants.TURN_MULTIPLIER;
         driveX *= RobotConstants.STRAFE_MULTIPLIER;
@@ -221,11 +242,17 @@ public class MecanumDriveTrain {
         rightBack.setPower(rightBackPower);
     }
 
-    private double applyDeadzone(double input) {
+    /**
+     * @param input Controller stick input
+     * @return Input with applied controller deadzone and drive input curve
+     * @see setDriveInputCurve
+     */
+    private double filterInput(double input) {
         if (Math.abs(input) < RobotConstants.CONTROLLER_DEADZONE) {
             return 0;
         } else {
-            return input;
+            // Input with cubic curve applied
+            return (driveInputCurve*(Math.pow(input, 3)))+((1-driveInputCurve)*input);
         }
     }
 }
