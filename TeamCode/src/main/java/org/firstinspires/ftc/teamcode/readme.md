@@ -1,3 +1,3 @@
 ## GoBilda Mecanum Robot
 
-This repo contains code for the mecanum robot with the PinPoint odometry computer in the center.
+This repo contains code for the mecanum robot (which used to have) the PinPoint odometry computer in the center.
