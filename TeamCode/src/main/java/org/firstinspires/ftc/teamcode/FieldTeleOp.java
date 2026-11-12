@@ -27,27 +27,31 @@ public class FieldTeleOp extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
-            double driveX = gamepad1.left_stick_x;
-            double driveY = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
+        if (opModeIsActive()) {
+            // Code that runs once on start
 
-            // Swap drive mode on keypress
-            if (gamepad1.dpad_up && !lastDpadUp) {
-                driveTrain.toggleDriveMode();
+            while (opModeIsActive()) {
+                double driveX = gamepad1.left_stick_x;
+                double driveY = -gamepad1.left_stick_y;
+                double turn = gamepad1.right_stick_x;
+
+                // Swap drive mode on keypress
+                if (gamepad1.dpad_up && !lastDpadUp) {
+                    driveTrain.toggleDriveMode();
+                }
+                lastDpadUp = gamepad1.dpad_up;
+
+                // Reset imu direction on button press
+                if (gamepad1.options) {
+                    driveTrain.imuResetYaw();
+                }
+
+                // Drive robot
+                driveTrain.drive(driveX, driveY, turn);
+
+                // Update telemetry
+                updateDriveTelemetry();
             }
-            lastDpadUp = gamepad1.dpad_up;
-
-            // Reset imu direction on button press
-            if (gamepad1.options) {
-                driveTrain.imuResetYaw();
-            }
-
-            // Drive robot
-            driveTrain.drive(driveX, driveY, turn);
-
-            // Update telemetry
-            updateDriveTelemetry();
         }
     }
 
