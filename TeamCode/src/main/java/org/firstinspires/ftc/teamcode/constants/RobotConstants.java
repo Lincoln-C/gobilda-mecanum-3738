@@ -18,6 +18,7 @@ public class RobotConstants {
 
     // ---------- ROBOT MISC ELECTRONICS ----------
     public static final String IMU_NAME = "imu";
+    public static final String SERVO_ATTACHMENT = "sideservo";
 
     // ---------- GAMEPAD ----------
     public static final double CONTROLLER_DEADZONE = 0.07;

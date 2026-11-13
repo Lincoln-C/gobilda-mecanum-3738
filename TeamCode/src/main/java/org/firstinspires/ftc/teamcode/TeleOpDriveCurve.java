@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.ServoAttachment;
 
 @TeleOp
 public class TeleOpDriveCurve extends LinearOpMode {
@@ -14,12 +15,14 @@ public class TeleOpDriveCurve extends LinearOpMode {
 
     // Initializing systems and controller input tracking
     private MecanumDriveTrain driveTrain;
+    private ServoAttachment servo;
     private boolean lastDpadUp = false;
 
     @Override
     public void runOpMode() {
         // Map drivetrain
         driveTrain = new MecanumDriveTrain(hardwareMap);
+        servo = new ServoAttachment(hardwareMap);
 
         // This code runs after pushing INIT on driver station
         telemetry.addData("Status", "Running");
@@ -49,6 +52,9 @@ public class TeleOpDriveCurve extends LinearOpMode {
 
                 // Drive robot
                 driveTrain.drive(driveX, driveY, turn);
+
+                // Run servo
+                servo.setServoOutput(gamepad1.right_trigger - gamepad1.left_trigger);
 
                 // Update telemetry
                 updateDriveTelemetry();
