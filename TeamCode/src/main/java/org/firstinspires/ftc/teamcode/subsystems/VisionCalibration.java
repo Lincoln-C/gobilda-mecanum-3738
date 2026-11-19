@@ -57,7 +57,7 @@ public class VisionCalibration {
         FiducialResult targetTag = getTagById(result, targetId); // Get the target
 
         // If the robot can't see anything, stop
-        if (result == null || !result.isValid()) {
+        if (result == null || !result.isValid() || targetTag) {
             drive.drive(0, 0, 0);
             return false; // Failure, oh no.
         }
@@ -71,8 +71,13 @@ public class VisionCalibration {
         }
 
         // Find direction to spin robot
-        if (tx > 0) { drive.drive(0, 0, 0.15); } // Spin right
-        else { drive.drive(0, 0, -0.15); }
+        //if (tx > 0) { drive.drive(0, 0, 0.15); } // Spin right
+        //else { drive.drive(0, 0, -0.15); }
+
+        // Spin robot using curve (PID in a way)
+        double speedDegreeMultiplier = 0.0111; // 90 degrees offset is full (1) power
+        
+        drive.drive(0, 0, speedDegreeMultiplier*tx); // Spin the way that tx is
 
         return false; // Still turning...
     }
