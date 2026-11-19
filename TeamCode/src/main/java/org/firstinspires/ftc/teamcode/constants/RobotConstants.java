@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.constants;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 /**
  * All robot constant values go here
  * <p>
@@ -18,7 +20,18 @@ public class RobotConstants {
 
     // ---------- ROBOT MISC ELECTRONICS ----------
     public static final String IMU_NAME = "imu";
+    public static final String LIMELIGHT_NAME = "limelight";
     public static final String SERVO_ATTACHMENT = "sideservo";
+
+    // To adjust logo and usb see
+    // https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html
+    public static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION =
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    public static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION =
+            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+
+    // ---------- LIMELIGHT NUMBERS ----------
+    public static final double LL_DEGREES_ROTATION_ALIGNED = 1.5;
 
     // ---------- GAMEPAD ----------
     public static final double CONTROLLER_DEADZONE = 0.07;
