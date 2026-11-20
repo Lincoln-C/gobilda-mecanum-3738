@@ -24,7 +24,7 @@ public class TestVisionAlign extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            alignToTagWithTimeout(22, 30.0);
+            alignToTagWithTimeout(22, 999.0);
 
             // Launch, do other things...
         }
@@ -42,6 +42,7 @@ public class TestVisionAlign extends LinearOpMode {
             telemetry.addData("Target Tag", targetTagId);
             telemetry.addData("Aligned", isAligned);
             telemetry.addData("Time Left", "%.1f s", maxSeconds - alignTimer.seconds());
+            telemetry.addData("Target Turn Power", vision.getVisionTurnSpeed());
             telemetry.update();
 
             if (isAligned) {

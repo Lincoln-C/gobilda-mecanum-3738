@@ -28,6 +28,10 @@ public class VisionCalibration {
     private final IMU imu;
     private final Limelight3A limelight;
 
+    // Speed multiplier
+    double speedDegreeMultiplier = 0.04;
+    double tagXTelem = 0.0;
+
     /**
      * Sets up the limelight and things using the provided robot hardware info.
      * @param hardwareMap Just say hardwareMap in the parenthesis for it to work.
@@ -57,12 +61,15 @@ public class VisionCalibration {
         FiducialResult targetTag = getTagById(result, targetId); // Get the target
 
         // If the robot can't see anything, stop
-        if (result == null || !result.isValid() || targetTag) {
+        if (result == null || !result.isValid() || targetTag == null) {
             drive.drive(0, 0, 0);
             return false; // Failure, oh no.
         }
 
         double tx = targetTag.getTargetXDegrees();
+
+        // Telemetry
+        tagXTelem = targetTag.getTargetXDegrees();
 
         // If tag is in the "good" window then it is aligned
         if (Math.abs(tx) <= RobotConstants.LL_DEGREES_ROTATION_ALIGNED) {
@@ -75,11 +82,13 @@ public class VisionCalibration {
         //else { drive.drive(0, 0, -0.15); }
 
         // Spin robot using curve (PID in a way)
-        double speedDegreeMultiplier = 0.0111; // 90 degrees offset is full (1) power
-        
         drive.drive(0, 0, speedDegreeMultiplier*tx); // Spin the way that tx is
 
         return false; // Still turning...
+    }
+
+    public double getVisionTurnSpeed() {
+        return speedDegreeMultiplier*tagXTelem;
     }
 
     private FiducialResult getTagById(LLResult result, int targetId) {
